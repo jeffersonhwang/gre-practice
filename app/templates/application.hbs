@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="menu">
+    {{#link-to 'index'}}
+      <h1 class="left">
+        <em>GrePractice</em>
+      </h1>
+    {{/link-to}}
+    <div class="left links">
+      {{#link-to 'about'}}About{{/link-to}}
+      {{#link-to 'dashboard'}}Dashboard{{/link-to}}
+      {{#link-to 'practice'}}Practice{{/link-to}}
+    </div>
+  </div>
+  <div class="body">
+    {{outlet}}
+  </div>
+</div>

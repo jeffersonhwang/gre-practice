@@ -7,6 +7,11 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('about');
+  this.route('practice', function() {
+    this.route('session', { path: '/:sessionId' });
+  });
+  this.route('dashboard');
 });
 
 export default Router;

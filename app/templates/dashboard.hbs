@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col-md-6">
+    <div><em>Name: </em>{{model.name}}</div>
+    <div><em>Test Date: </em>{{model.testDate}}</div>
+  </div>
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-3">
+        <h4>Estimated</h4>
+        <div>Verbal: {{model.scoreEstimate.verbal}}</div>
+        <div>Quant: {{model.scoreEstimate.quantative}}</div>
+      </div>
+      <div class="col-md-3">
+        <h4>Goal</h4>
+        <div>{{model.scoreGoal.verbal}}</div>
+        <div>{{model.scoreGoal.quantative}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6 section-stats">
+    <h4>Quantative Section Stats</h4>
+    <div>{{model.problemStats.quantative.totalAnswered}} out of {{model.problemStats.quantative.totalProblems}} answered</div>
+    <div>{{format-percent model.problemStats.quantative.percentCorrect}} Correctness Rate</div>
+  </div>
+  <div class="col-md-6 section-stats">
+    <h4>Verbal Section Stats</h4>
+    <div>{{model.problemStats.verbal.totalAnswered}} out of {{model.problemStats.verbal.totalProblems}} answered</div>
+    <div>{{format-percent model.problemStats.verbal.percentCorrect}} Correctness Rate</div>
+  </div>
+</div>
+<div class="history">
+  <div class="row">
+    <div class="col-sm-12">
+      <h4>Practice History</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><b>Date</b></div>
+    <div class="col-md-3"><b>Practice Type</b></div>
+    <div class="col-md-3"><b>Total Problems</b></div>
+    <div class="col-md-3"><b>Percentage Correct</b></div>
+  </div>
+  {{#each model.practiceSessionHistory as |practiceSession|}}
+    <div class="row">
+      <div class="col-md-3">{{practiceSession.date}}</div>
+      <div class="col-md-3">{{practiceSession.type}}</div>
+      <div class="col-md-3">{{practiceSession.totalProblems}}</div>
+      <div class="col-md-3">{{format-percent practiceSession.percentCorrect}}</div>
+    </div>
+  {{/each}}
+</div>
+{{outlet}}
