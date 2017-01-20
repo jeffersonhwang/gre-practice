@@ -10,5 +10,6 @@ import DS from 'ember-data';
 export default DS.Model.extend({
   creationDate: DS.attr('date'),
   lastModified: DS.attr('date'),
-  sessionStats: DS.attr()
+  sessionStats: DS.attr(),
+  practiceType: DS.attr()
 });

@@ -1,2 +1,7 @@
 <h4>This is a session</h4>
+{{#each model as |problem|}}
+  <div class="row">
+    {{problem.data.question}}
+  </div>
+{{/each}}
 {{outlet}}

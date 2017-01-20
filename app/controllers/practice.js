@@ -12,20 +12,27 @@ export default Ember.Controller.extend({
     submitPractice() {
       console.log('submitting!');
       const selectedPractice = this.get('selectedPracticeType');
-      let practiceSession = this.get('store').createRecord('practiceSession', {
+      const practiceSession = {
         creationDate: new Date(),
         lastModified: new Date(),
         sessionStats: {
           numberOfQuestions: 10,
-          section: this.get('selectedPracticeType.type')
-        }
-      });
+          sections: this.get('selectedPracticeType.options.sections')
+        },
+        practiceType: selectedPractice
+      };
+      console.log(practiceSession);
+      let practiceSessionRecord = this.get('store').createRecord('practiceSession', practiceSession);
 
       var self = this;
-      practiceSession.save()
+      var store = this.get('store');
+      practiceSessionRecord.save()
         .then(function(session) {
           console.log('made it!');
-          console.log(session.id);
+          console.log(session);
+          // TODO: Figure out how to push it into the cache
+          // store.push({ data: practiceSession });
+          console.log('session' + session.id);
           self.transitionToRoute('practice.session', session.id);
         });
     }
