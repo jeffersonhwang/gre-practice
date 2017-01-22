@@ -1,4 +1,4 @@
-import {Enum} from 'npm:enumify';
+//import {Enum} from 'npm:enumify';
 
 export default function() {
 
@@ -11,7 +11,7 @@ export default function() {
   //SectionType.initEnum(['All', 'Quantative', 'Verbal']);
 
   let practiceTypes = [{
-      type: 'practice-types',
+      type: 'practice-type',
       id: 'Custom',
       attributes: {
         type: 'Custom',
@@ -21,7 +21,7 @@ export default function() {
         }
       }
     }, {
-        type: 'practice-types',
+        type: 'practice-type',
         id: 'Quick',
         attributes: {
           type: 'Quick',
@@ -31,25 +31,25 @@ export default function() {
         }
     }];
 
-  let practiceSessions = [{
-    id: 1,
-    type: 'practice-session',
-    attributes: {
-      creationDate: new Date(2016, 12, 12, 16, 45, 0, 0),
-      lastModified: new Date(2016, 12, 15, 20, 0, 0, 0),
-      sessionStats: {
-        numberOfQuestions: 4,
-        questions: ['id1', 'id2']
-      },
-      practiceType: {
-        type: 'Custom',
-        options: {
-          timing: ['Untimed'],
-          sections: ['Verbal']
+    let practiceSessions = [{
+      id: 1,
+      type: 'practice-session',
+      attributes: {
+        creationDate: new Date(2016, 12, 12, 16, 45, 0, 0),
+        lastModified: new Date(2016, 12, 15, 20, 0, 0, 0),
+        problemIds: ['82cjfh', '72cjfh'],
+        sessionStats: {
+          numberOfProblems: 4
+        },
+        practiceType: {
+          type: 'Custom',
+          options: {
+            timing: ['Untimed'],
+            sections: ['Verbal']
+          }
         }
       }
-    }
-  }];
+    }];
 
 
     let problems = [{
@@ -181,7 +181,7 @@ export default function() {
       }
     }];
 
-  this.get('/practice-types', function(db, request) {
+  this.get('/practice-types', function() {
     return { data: practiceTypes };
   });
 
@@ -190,15 +190,20 @@ export default function() {
   });
 
   // gets you a history of your practice sessions
-  this.get('/practice-sessions', function(db, request) {
+  this.get('/practice-sessions', function() {
     return { data: practiceSessions };
   });
 
+  // creates a new practice session
   this.post('/practice-sessions', function(db, request) {
     var pSessionId = 1;
     let practiceSession = JSON.parse(request.requestBody).data;
     if (practiceSession) {
       practiceSession.id = ++pSessionId;
+
+      // need to grab X question ids
+      practiceSession.attributes.problemIds = problems.map((p) => p.id);
+
       practiceSessions.push(practiceSession);
       console.log(practiceSessions);
     }
@@ -221,7 +226,7 @@ export default function() {
     if (!request.params.practiceSessionId) {
       return { errors: ['No practice session id requested!'] };
     }
-    let practiceSession = practiceSessions.find((ps) => request.params.practiceSessionId == ps.id);
+    let practiceSession = practiceSessions.find((ps) => parseInt(request.params.practiceSessionId) === ps.id);
 
     if (!practiceSession) {
       return { errors: ['Could not find the practice session!'] };
@@ -230,9 +235,13 @@ export default function() {
     return { data: practiceSession };
   });
 
-  this.get('/problems', function(db, request) {
+  this.get('/problems', function() {
     // TODO: Filter based on criteria
     return { data: problems };
+  });
+
+  this.get('/problems/:id', function(db, request) {
+    return { data: problems.find((p) => request.params.id === p.id) };
   });
 
   // Information about the user, endpoints

@@ -1,6 +1,6 @@
 import { moduleForModel, test } from 'ember-qunit';
 
-moduleForModel('practice-types', 'Unit | Model | practice types', {
+moduleForModel('practice-type', 'Unit | Model | practice type', {
   // Specify the other units that are required for this test.
   needs: []
 });

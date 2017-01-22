@@ -1,0 +1,12 @@
+<h2>Problem {{currentProblemIndex}}</h2>
+<div class="row">
+  <div class="col-sm-6">
+    {{model.passage}}
+  </div>
+  <div class="col-sm-6">
+    <div class="row">{{model.question}}</div>
+    {{#each model.answerChoices as |answerChoice|}}
+    <div class="row">{{answerChoice}}</div>
+    {{/each}}
+  </div>
+</div>

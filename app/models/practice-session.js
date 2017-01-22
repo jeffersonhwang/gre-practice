@@ -10,6 +10,9 @@ import DS from 'ember-data';
 export default DS.Model.extend({
   creationDate: DS.attr('date'),
   lastModified: DS.attr('date'),
-  sessionStats: DS.attr(),
+  problemIds: DS.attr(),
+  section: DS.attr('string'),
+  timing: DS.attr('string'),
+  numberOfProblems: DS.attr('number'),
   practiceType: DS.attr()
 });

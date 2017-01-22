@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-12">
       <label>Practice Type:</label>
-      <select onchange={{action 'onSelectPracticeType' value="target.value" bubbles=true}}>
+      <select class="practice-type" onchange={{action 'onSelectPracticeType' value="target.value" bubbles=true}}>
           <option selected={{eq selectedPracticeType practiceType.type}}></option>
         {{#each model as |practiceType|}}
           <option value="{{practiceType.type}}" selected={{eq selectedPracticeType practiceType.type}}>{{practiceType.type}}</option>
@@ -11,7 +11,17 @@
     </div>
     <div class="col-sm-12">
       <label>Options</label>
-      {{practice-options options=this.selectedPracticeType.options}}
+      <div class="timing-options">
+      {{#each selectedPracticeType.options.timing as |timing|}}
+        {{#radio-button value=timing groupValue=selectedTiming}}{{timing}}{{/radio-button}}
+      {{/each}}
+      </div>
+
+      <div class="section-options">
+      {{#each selectedPracticeType.options.sections as |section|}}
+        {{#radio-button value=section groupValue=selectedSection}}{{section}}{{/radio-button}}
+      {{/each}}
+      </div>
     </div>
   </div>
   <button type="submit">Go!</button>

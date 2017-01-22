@@ -1,4 +1,5 @@
 import { moduleForComponent, test } from 'ember-qunit';
+import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 
 moduleForComponent('practice-options', 'Integration | Component | practice options', {
@@ -9,17 +10,20 @@ test('it renders', function(assert) {
 
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
+  let practiceType = Ember.Object.create({
+      type: 'Quick',
+      options: {
+        sections: ['Quantative', 'Verbal']
+      }
+  });
 
-  this.render(hbs`{{practice-options}}`);
+  this.set('practiceType', practiceType);
 
-  assert.equal(this.$().text().trim(), '');
+  this.render(hbs`{{practice-options options=this.practiceType.options}}`);
 
-  // Template block usage:
-  this.render(hbs`
-    {{#practice-options}}
-      template block text
-    {{/practice-options}}
-  `);
-
-  assert.equal(this.$().text().trim(), 'template block text');
+  let sectionOptions = this.$('.section-options > input[type="radio"]');
+  console.log(sectionOptions);
+  assert.equal(sectionOptions.length, 2);
+  assert.equal(sectionOptions[0].value, 'Quantative');
+  assert.equal(sectionOptions[1].value, 'Verbal');
 });

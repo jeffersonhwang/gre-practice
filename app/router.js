@@ -9,7 +9,11 @@ const Router = Ember.Router.extend({
 Router.map(function() {
   this.route('about');
   this.route('practice', function() {
-    this.route('session', { path: '/:sessionId' });
+    this.route('session', { path: '/session/:session_id' }, function() {
+      this.route('problem', function() {
+        this.route('show', { path:'/:problem_id'});
+      });
+    });
   });
   this.route('dashboard');
 });

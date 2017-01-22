@@ -1,7 +1,5 @@
 import Ember from 'ember';
 
-let selectedPracticeType = {};
-
 export default Ember.Controller.extend({
   selectedPracticeType: null,
   actions: {
@@ -9,32 +7,28 @@ export default Ember.Controller.extend({
       let pType = this.get('store').findRecord('practiceType', type);
       this.set('selectedPracticeType', pType);
     },
+    onSectionChanged(section) {
+      this.set('selectedSection', section);
+    },
+    onTimingChanged(timing) {
+      this.set('selectedTiming', timing);
+    },
     submitPractice() {
       console.log('submitting!');
-      const selectedPractice = this.get('selectedPracticeType');
+
       const practiceSession = {
         creationDate: new Date(),
         lastModified: new Date(),
-        sessionStats: {
-          numberOfQuestions: 10,
-          sections: this.get('selectedPracticeType.options.sections')
-        },
-        practiceType: selectedPractice
+        numberOfProblems: 10,
+        section: this.get('selectedSection'),
+        timing: this.get('selectedTiming'),
+        practiceType: this.get('selectedPracticeType.type'),
       };
-      console.log(practiceSession);
       let practiceSessionRecord = this.get('store').createRecord('practiceSession', practiceSession);
 
       var self = this;
-      var store = this.get('store');
       practiceSessionRecord.save()
-        .then(function(session) {
-          console.log('made it!');
-          console.log(session);
-          // TODO: Figure out how to push it into the cache
-          // store.push({ data: practiceSession });
-          console.log('session' + session.id);
-          self.transitionToRoute('practice.session', session.id);
-        });
+        .then( (session) => self.transitionToRoute('practice.session.problem.index', session.id) );
     }
   }
 });

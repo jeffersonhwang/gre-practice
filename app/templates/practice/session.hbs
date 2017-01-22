@@ -1,7 +1,13 @@
 <h4>This is a session</h4>
-{{#each model as |problem|}}
-  <div class="row">
-    {{problem.data.question}}
-  </div>
-{{/each}}
+<table class="table">
+<thead>
+  <!-- Todo: Loop over properties and put here -->
+  <th></th>
+</thead>
+<tbody>
+  <!-- {{#each model as |problem|}}
+    <td>{{problem}}</td>
+  {{/each}} -->
+</tbody>
+</table>
 {{outlet}}
