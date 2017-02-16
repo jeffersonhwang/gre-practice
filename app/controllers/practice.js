@@ -8,6 +8,7 @@ export default Ember.Controller.extend({
       this.set('selectedPracticeType', pType);
     },
     onSectionChanged(section) {
+      console.log(section);
       this.set('selectedSection', section);
     },
     onTimingChanged(timing) {
@@ -17,18 +18,16 @@ export default Ember.Controller.extend({
       console.log('submitting!');
 
       const practiceSession = {
-        creationDate: new Date(),
-        lastModified: new Date(),
-        numberOfProblems: 10,
+        numberOfProblems: 6,
         section: this.get('selectedSection'),
         timing: this.get('selectedTiming'),
-        practiceType: this.get('selectedPracticeType.type'),
+        practiceType: this.get('selectedPracticeType.type')
       };
-      let practiceSessionRecord = this.get('store').createRecord('practiceSession', practiceSession);
 
-      var self = this;
+      let self = this;
+      let practiceSessionRecord = this.get('store').createRecord('practiceSession', practiceSession);
       practiceSessionRecord.save()
-        .then( (session) => self.transitionToRoute('practice.session.problem.index', session.id) );
+        .then( (session) => self.transitionToRoute('practice.session', session.id) );
     }
   }
 });

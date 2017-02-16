@@ -1,0 +1,7 @@
+This is a summary
+<!-- <p>Session started: {{ model.creationDate }}</p> -->
+<p>Complete: {{ model.isComplete }}</p>
+<p>Section: {{ model.section }}</p>
+{{#each model.problemStats as |problemStat| }}
+<p>{{ problemStat.problemId }} {{ problemStat.yourAnswer }} {{ problemStat.isCorrect }} {{ problemStat.sectionType }} {{ problemStat.questionType }} {{ problemStat.difficultyLevel }} {{ problemStat.percentCorrect }}</p>
+{{/each}}

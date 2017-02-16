@@ -1,12 +1,40 @@
-<h2>Problem {{currentProblemIndex}}</h2>
+<!-- Not sure what this file is about -->
+
 <div class="row">
+{{#if (eq model.questionType "ReadingsComprehension")}}
   <div class="col-sm-6">
     {{model.passage}}
   </div>
   <div class="col-sm-6">
     <div class="row">{{model.question}}</div>
-    {{#each model.answerChoices as |answerChoice|}}
-    <div class="row">{{answerChoice}}</div>
-    {{/each}}
+    <!-- TODO: Turn this into an array of answers -->
+    <div class="row"><label>A</label> {{model.answerChoices.A}}</div>
+    <div class="row"><label>B</label> {{model.answerChoices.B}}</div>
+    <div class="row"><label>C</label> {{model.answerChoices.C}}</div>
+    <div class="row"><label>D</label> {{model.answerChoices.D}}</div>
+    <div class="row"><label>E</label> {{model.answerChoices.E}}</div>
+  </div>
+
+{{else if (eq model.questionType "TextCompletion")}}
+
+<div class="col-sm-12">
+  <div class="row">{{model.question}}</div>
+  <!-- TODO: Turn this into an array of answers -->
+  <div class="row"><label>A</label> {{model.answerChoices.A}}</div>
+  <div class="row"><label>B</label> {{model.answerChoices.B}}</div>
+  <div class="row"><label>C</label> {{model.answerChoices.C}}</div>
+  <div class="row"><label>D</label> {{model.answerChoices.D}}</div>
+  <div class="row"><label>E</label> {{model.answerChoices.E}}</div>
+</div>
+
+{{/if}}
+
+</div>
+<div class="row">
+  <div class="pull-left">
+    <button type="submit" {{action "endPractice"}}>End Practice</button>
+  </div>
+  <div class="pull-right">
+    <button type="submit" {{action "submitAnswer"}}>Submit Answer</button>
   </div>
 </div>

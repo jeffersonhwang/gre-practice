@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-sm-6">
+    {{problem.passage}}
+  </div>
+  <div class="col-sm-6">
+    <div class="row">{{problem.question}}</div>
+    <!-- TODO: Turn this into an array of answers -->
+    <div class="row">
+      {{radio-button value="A" groupValue=answer changed="changed"}}<b>A</b> {{problem.answerChoices.A}}
+    </div>
+    <div class="row">
+      {{radio-button value="B" groupValue=answer changed="changed"}}<b>B</b> {{problem.answerChoices.B}}
+    </div>
+    <div class="row">
+      {{radio-button value="C" groupValue=answer changed="changed"}}<b>C</b> {{problem.answerChoices.C}}
+    </div>
+    <div class="row">
+      {{radio-button value="D" groupValue=answer changed="changed"}}<b>D</b> {{problem.answerChoices.D}}
+    </div>
+    <div class="row">
+      {{radio-button value="E" groupValue=answer changed="changed"}}<b>E</b> {{problem.answerChoices.E}}
+    </div>
+  </div>
+</div>

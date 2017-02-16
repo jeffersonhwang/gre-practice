@@ -8,11 +8,28 @@ import DS from 'ember-data';
 // }
 
 export default DS.Model.extend({
+  // profile: DS.belongsTo('profile'),
   creationDate: DS.attr('date'),
   lastModified: DS.attr('date'),
   problemIds: DS.attr(),
   section: DS.attr('string'),
   timing: DS.attr('string'),
   numberOfProblems: DS.attr('number'),
-  practiceType: DS.attr()
+  practiceType: DS.attr(),
+  problemStats: DS.attr(),//DS.hasMany('problem-stat')
+  isComplete: DS.attr('boolean')
 });
+
+// summary
+/*
+practice session:
+...
+problemSummary: {
+  problemStats: [{
+    difficultyLevel,
+    
+}]
+}
+
+
+ */

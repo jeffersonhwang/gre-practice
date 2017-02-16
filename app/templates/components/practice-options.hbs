@@ -1,11 +1,11 @@
 <div class="timing-options">
 {{#each options.timing as |timing|}}
-  <input type="radio" name="timing" value="{{timing}}">{{timing}}
+  {{radio-button value="{{timing}}" groupValue=timing changed="changed"}}{{timing}}
 {{/each}}
 </div>
 
 <div class="section-options">
 {{#each options.sections as |section|}}
-  <input type="radio" name="section" value="{{section}}">{{section}}
+  {{radio-button value="{{section}}" groupValue=section changed="changed"}}{{section}}
 {{/each}}
 </div>

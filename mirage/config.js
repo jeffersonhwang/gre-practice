@@ -38,9 +38,26 @@ export default function() {
         creationDate: new Date(2016, 12, 12, 16, 45, 0, 0),
         lastModified: new Date(2016, 12, 15, 20, 0, 0, 0),
         problemIds: ['82cjfh', '72cjfh'],
-        sessionStats: {
-          numberOfProblems: 4
-        },
+        numberOfProblems: 2,
+        section: 'Verbal',
+        isComplete: true,
+        problemStats: [{
+          problemId: '82cjfh',
+          yourAnswer: 'A',
+          isCorrect: false,
+          sectionType: 'VerbalReasoning',
+          questionType: 'ReadingComprehension',
+          difficultyLevel: 'Medium',
+          percentCorrect: 0.64
+        }, {
+          problemId: '72cjfh',
+          yourAnswer: 'B',
+          isCorrect: true,
+          sectionType: 'VerbalReasoning',
+          questionType: 'ReadingComprehension',
+          difficultyLevel: 'Hard',
+          percentCorrect: 0.44
+        }],
         practiceType: {
           type: 'Custom',
           options: {
@@ -51,6 +68,7 @@ export default function() {
       }
     }];
 
+    // User <-> Practice Session <-> AnsweredProblemStats
 
     let problems = [{
       id: "82cjfh",
@@ -65,7 +83,7 @@ export default function() {
           "E": "studied reproduction in the same animal species"
         },
         "sectionType": "VerbalReasoning",
-        "questionType": "ReadingComprehension",
+        "questionType": "reading-comprehension",
         "question": "The author suggests that the work of Fisher and Hamilton was similar in that both scientists",
         "answer": "C",
         "canSelectMultipleAnswers": false,
@@ -85,7 +103,7 @@ export default function() {
           "C": "What is the approximate sex ratio among the offspring of parasitic wasps?"
         },
         "sectionType": "VerbalReasoning",
-        "questionType": "ReadingComprehension",
+        "questionType": "reading-comprehension",
         "question": "The passage contains information that would answer which of the following questions about wasps?",
         "answer": "B",
         "canSelectMultipleAnswers": false,
@@ -107,7 +125,7 @@ export default function() {
           "E": "Male wasps do not emerge from their hosts until they reach sexual maturity."
         },
         "sectionType": "VerbalReasoning",
-        "questionType": "ReadingComprehension",
+        "questionType": "reading-comprehension",
         "question": "Which of the following is NOT true of the species of parasitic wasps discussed in the passage?",
         "answer": "D",
         "canSelectMultipleAnswers": false,
@@ -128,7 +146,7 @@ export default function() {
           "E": "dwindles"
         },
         "sectionType": "VerbalReasoning",
-        "questionType": "TextCompletion",
+        "questionType": "text-completion",
         "question": "Although adolescent maturational and developmental states occur in an orderly sequence, their timing _____ with regard to onset and duration.",
         "answer": "B",
         "canSelectMultipleAnswers": false,
@@ -149,7 +167,7 @@ export default function() {
           "E": "challenging"
         },
         "sectionType": "VerbalReasoning",
-        "questionType": "TextCompletion",
+        "questionType": "text-completion",
         "question": "The prospects of discovering new aspects of the life of a painter as thoroughly studied as Vermeer are not, on the surface,_____.",
         "answer": "A",
         "canSelectMultipleAnswers": false,
@@ -170,7 +188,7 @@ export default function() {
           "E": "domination"
         },
         "sectionType": "VerbalReasoning",
-        "questionType": "TextCompletion",
+        "questionType": "text-completion",
         "question": "The Chinese, who began systematic astronomical and weather observations shortly after the ancient Egyptians, were assiduous record-keepers, and because of this, can claim humanity’s longest continuous _____ of natural events.",
         "answer": "B",
         "canSelectMultipleAnswers": false,
@@ -180,6 +198,15 @@ export default function() {
         }
       }
     }];
+
+  let profile = {
+    id: 1,
+    attributes: {
+      username: 'jhwang',
+      password: 'Password123',
+      practiceSessions: []
+    }
+  };
 
   this.get('/practice-types', function() {
     return { data: practiceTypes };
@@ -195,15 +222,28 @@ export default function() {
   });
 
   // creates a new practice session
+  var pSessionId = 1;
   this.post('/practice-sessions', function(db, request) {
-    var pSessionId = 1;
     let practiceSession = JSON.parse(request.requestBody).data;
     if (practiceSession) {
       practiceSession.id = ++pSessionId;
 
       // need to grab X question ids
       practiceSession.attributes.problemIds = problems.map((p) => p.id);
-
+      practiceSession.attributes.isComplete = false;
+      practiceSession.attributes.creationDate = new Date();
+      practiceSession.attributes.lastModified = new Date();
+      practiceSession.attributes.problemStats = [];
+      problems.forEach(function(p) {
+         practiceSession.attributes.problemStats.push({
+            problemId: p.id,
+            isCorrect: false,
+            sectionType: p.attributes.sectionType,
+            questionType: p.attributes.questionType,
+            percentCorrect: p.attributes.stats.percentCorrect,
+            difficultyLevel: p.attributes.difficultyLevel
+          });
+      });
       practiceSessions.push(practiceSession);
       console.log(practiceSessions);
     }
@@ -211,28 +251,44 @@ export default function() {
     return { data: practiceSession };
   });
 
-  // update the practice session
-  // this.patch('/practice-sessions/:practiceSessionId', function(db, request) {
-  //   let practiceSession = practiceTypes.find((practiceSession) => request.params.practiceSessionId === practiceSession.id);
-  //
-  //   practiceSession.sessionStats.numberOfQuestions += request.params.numberOfQuestions;
-  //   practiceSession.sessionStats.questions.concat(request.params.questions);
-  //   practiceSession.lastModified = new Date();
-  //
-  //   practiceSession.save();
-  // });
-
   this.get('/practice-sessions/:practiceSessionId', function(db, request) {
     if (!request.params.practiceSessionId) {
       return { errors: ['No practice session id requested!'] };
     }
-    let practiceSession = practiceSessions.find((ps) => parseInt(request.params.practiceSessionId) === ps.id);
+    let practiceSession = practiceSessions.find((ps) => request.params.practiceSessionId == ps.id);
 
     if (!practiceSession) {
       return { errors: ['Could not find the practice session!'] };
     }
 
     return { data: practiceSession };
+  });
+
+  this.patch('/practice-sessions/:practiceSessionId', function(db, request) {
+    let practiceSession = JSON.parse(request.requestBody).data;
+    console.log(practiceSession.id);
+    // https://github.com/emberjs/data/issues/4721
+    // TL;DR JSONAPIAdapter does not support only sending changed properties for PATCH yet
+    let success = false;
+    practiceSession.id = parseInt(practiceSession.id)
+    for (var i = 0;i < practiceSessions.length;i++) {
+      if (practiceSessions[i].id === practiceSession.id) {
+        practiceSessions[i] = practiceSession;
+        success = true;
+      }
+    }
+
+    if (success) {
+      return { data: null };
+    }
+    else {
+      return { errors: ['Failed to Patch Session ' + practiceSession.id] };
+    }
+  });
+
+  this.post('/practice-sessions/:practiceSessionId/problem/:problem_id', function(db, request) {
+    let sessionId = request.params.practiceSessionId;
+    let problemId = request.params.problem_id;
   });
 
   this.get('/problems', function() {
